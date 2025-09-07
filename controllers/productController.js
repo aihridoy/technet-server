@@ -71,3 +71,17 @@ exports.getComments = async (req, res) => {
     res.status(500).send({ status: false, error: err.message });
   }
 };
+
+exports.searchProducts = async (req, res) => {
+  try {
+    const { name } = req.query;
+    let query = {};
+    if (name) {
+      query = { name: { $regex: new RegExp(name, "i") } };
+    }
+    const products = await productCollection().find(query).toArray();
+    res.send({ status: true, data: products });
+  } catch (err) {
+    res.status(500).send({ status: false, error: err.message });
+  }
+};
