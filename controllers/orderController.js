@@ -22,3 +22,12 @@ exports.createOrder = async (req, res) => {
     res.status(500).send({ status: false, error: err.message });
   }
 };
+
+exports.getOrders = async (req, res) => {
+  try {
+    const orders = await orderCollection().find({}).toArray();
+    res.send({ status: true, data: orders });
+  } catch (err) {
+    res.status(500).send({ status: false, error: err.message });
+  }
+};
