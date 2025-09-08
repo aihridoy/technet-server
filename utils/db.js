@@ -16,7 +16,6 @@ const connectDB = async () => {
   try {
     await client.connect();
     db = client.db("tech-net");
-    // console.log("Connected to MongoDB");
   } catch (err) {
     console.error("Database connection failed:", err);
     process.exit(1);
