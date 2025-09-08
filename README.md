@@ -8,7 +8,7 @@ Welcome to the **Tech Net Server**, the robust backend API powering the Haylou s
 
 ## 🌟 Live Client Application
 
-**🔗 [Tech Net Store - Live Demo](https://awesometechnet.netlify.app)**
+**🔗 [Tech Net Store - Live Demo](https://awesometechnet.netlify.app) | [Frontend Repo](https://github.com/aihridoy/technet)**
 
 Experience the complete e-commerce platform powered by this backend API!
 
