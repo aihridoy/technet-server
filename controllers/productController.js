@@ -3,8 +3,30 @@ const { ObjectId } = require("../utils/db");
 
 exports.getProducts = async (req, res) => {
   try {
-    const products = await productCollection().find({}).toArray();
-    res.send({ status: true, data: products });
+    const { page = 1, limit = 12 } = req.query;
+    const pageNum = parseInt(page, 10);
+    const limitNum = parseInt(limit, 10);
+    const skip = (pageNum - 1) * limitNum;
+
+    const products = await productCollection()
+      .find({})
+      .skip(skip)
+      .limit(limitNum)
+      .toArray();
+
+    const total = await productCollection().countDocuments({});
+
+    res.send({
+      status: true,
+      data: products,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total,
+        totalPages: Math.ceil(total / limitNum),
+        hasMore: pageNum * limitNum < total,
+      },
+    });
   } catch (err) {
     res.status(500).send({ status: false, error: err.message });
   }
