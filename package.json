@@ -6,7 +6,10 @@
   "author": "Mir Hussain",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "jest --runInBand",
+    "promote-admin": "node scripts/promoteAdmin.js",
+    "seed": "node scripts/seed.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -15,6 +18,12 @@
     "mongodb": "^4.12.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "jest": "^30.4.2",
+    "mongodb-memory-server": "^11.2.0",
+    "nodemon": "^2.0.20",
+    "supertest": "^7.2.2"
+  },
+  "jest": {
+    "testTimeout": 30000
   }
 }

@@ -41,37 +41,6 @@ exports.deleteProduct = async (req, res) => {
   }
 };
 
-exports.addComment = async (req, res) => {
-  try {
-    const result = await productCollection().updateOne(
-      { _id: new ObjectId(req.params.id) },
-      { $push: { comments: req.body.comment } }
-    );
-    if (result.modifiedCount !== 1) {
-      return res.json({ error: "Product not found or comment not added" });
-    }
-    res.json({ message: "Comment added successfully" });
-  } catch (err) {
-    res.status(500).send({ status: false, error: err.message });
-  }
-};
-
-exports.getComments = async (req, res) => {
-  try {
-    const result = await productCollection().findOne(
-      { _id: new ObjectId(req.params.id) },
-      { projection: { _id: 0, comments: 1 } }
-    );
-    if (result) {
-      res.json(result);
-    } else {
-      res.status(404).json({ error: "Product not found" });
-    }
-  } catch (err) {
-    res.status(500).send({ status: false, error: err.message });
-  }
-};
-
 exports.searchProducts = async (req, res) => {
   try {
     const { name } = req.query;

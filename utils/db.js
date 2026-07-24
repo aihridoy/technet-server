@@ -2,20 +2,25 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.pfan7vt.mongodb.net/?retryWrites=true&w=majority`;
-
-const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverApi: ServerApiVersion.v1,
-});
-
+let client;
 let db;
 
 const connectDB = async () => {
+  if (client) return;
+
+  const uri =
+    process.env.MONGO_URI ||
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.pfan7vt.mongodb.net/?retryWrites=true&w=majority`;
+
+  client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverApi: ServerApiVersion.v1,
+  });
+
   try {
     await client.connect();
-    db = client.db("tech-net");
+    db = client.db(process.env.DB_NAME || "tech-net");
   } catch (err) {
     console.error("Database connection failed:", err);
     process.exit(1);
@@ -24,4 +29,10 @@ const connectDB = async () => {
 
 const getDB = () => db;
 
-module.exports = { connectDB, getDB, ObjectId };
+const disconnectDB = async () => {
+  if (client) {
+    await client.close();
+  }
+};
+
+module.exports = { connectDB, getDB, disconnectDB, ObjectId };
