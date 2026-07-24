@@ -41,6 +41,19 @@ exports.deleteProduct = async (req, res) => {
   }
 };
 
+exports.updateProduct = async (req, res) => {
+  try {
+    const { _id, ...updateData } = req.body;
+    const result = await productCollection().updateOne(
+      { _id: new ObjectId(req.params.id) },
+      { $set: updateData }
+    );
+    res.send({ status: true, data: result });
+  } catch (err) {
+    res.status(500).send({ status: false, error: err.message });
+  }
+};
+
 exports.searchProducts = async (req, res) => {
   try {
     const { name } = req.query;
