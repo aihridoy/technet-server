@@ -27,4 +27,10 @@ const connectDB = async () => {
 
 const getDB = () => db;
 
-module.exports = { connectDB, getDB, ObjectId };
+const disconnectDB = async () => {
+  if (client) {
+    await client.close();
+  }
+};
+
+module.exports = { connectDB, getDB, disconnectDB, ObjectId };

@@ -1,6 +1,6 @@
 const request = require("supertest");
 const { MongoMemoryServer } = require("mongodb-memory-server");
-const { connectDB } = require("../utils/db");
+const { connectDB, disconnectDB } = require("../utils/db");
 const app = require("../app");
 
 let mongod;
@@ -13,6 +13,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  await disconnectDB();
   await mongod.stop();
 });
 
