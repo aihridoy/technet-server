@@ -2,19 +2,20 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const uri =
-  process.env.MONGO_URI ||
-  `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.pfan7vt.mongodb.net/?retryWrites=true&w=majority`;
-
-const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverApi: ServerApiVersion.v1,
-});
-
+let client;
 let db;
 
 const connectDB = async () => {
+  const uri =
+    process.env.MONGO_URI ||
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.pfan7vt.mongodb.net/?retryWrites=true&w=majority`;
+
+  client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverApi: ServerApiVersion.v1,
+  });
+
   try {
     await client.connect();
     db = client.db(process.env.DB_NAME || "tech-net");
