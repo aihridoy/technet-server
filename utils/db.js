@@ -6,6 +6,8 @@ let client;
 let db;
 
 const connectDB = async () => {
+  if (client) return;
+
   const uri =
     process.env.MONGO_URI ||
     `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.pfan7vt.mongodb.net/?retryWrites=true&w=majority`;
