@@ -3,6 +3,7 @@ const cors = require("cors");
 const productRoutes = require("./routes/productRoutes");
 const userRoutes = require("./routes/userRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const wishlistRoutes = require("./routes/wishlistRoutes");
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(productRoutes);
 app.use(userRoutes);
 app.use(orderRoutes);
+app.use(wishlistRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
