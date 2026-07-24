@@ -39,16 +39,26 @@ exports.getMyOrders = async (req, res) => {
     if (!token) {
       return res.status(401).send({ status: false, error: "Missing auth token" });
     }
-    const decoded = await verifyFirebaseToken(token);
-    if (!decoded.email) {
-      return res.status(401).send({ status: false, error: "Invalid token" });
+
+    let decoded;
+    try {
+      decoded = await verifyFirebaseToken(token);
+    } catch (verifyErr) {
+      console.error("Token verification failed:", verifyErr.message);
+      return res.status(401).send({ status: false, error: "Invalid or expired token" });
     }
+
+    if (!decoded.email) {
+      return res.status(401).send({ status: false, error: "Token missing email claim" });
+    }
+
     const orders = await orderCollection()
       .find({ userEmail: decoded.email })
       .toArray();
     res.send({ status: true, data: orders });
   } catch (err) {
-    res.status(401).send({ status: false, error: "Invalid or expired token" });
+    console.error("getMyOrders error:", err.message);
+    res.status(500).send({ status: false, error: "Failed to fetch orders" });
   }
 };
 
