@@ -58,7 +58,9 @@ No fake Firebase accounts. Flow:
 
 ## Client changes (`technet-react-redux`)
 
-- `globalTypes.ts`: `IProduct` gains `ratingAvg: number; ratingCount: number` (replaces bare `rating`).
+**Correction found during planning:** `rating` is read in four places (`ProductCard.tsx`, `ProductDetails.tsx`, and local duplicate interfaces in `Home.tsx`/`Navbar.tsx`/`ShowProducts.tsx` used only for `useGetProductsQuery` results, which are untyped `any` at the RTK Query layer). Renaming to `ratingAvg` would force edits across all of them for no behavioral gain. Decision: **keep the field named `rating`** — it becomes server-computed (the aggregated average) instead of hand-set, and a new `ratingCount` field is added alongside it. Star-rendering code in `Home.tsx`/`ProductDetails.tsx` (`Math.floor(rating)`, `i < rating`) keeps working unchanged since a float average renders identically to a hand-set int.
+
+- `globalTypes.ts`: `IProduct` gains `ratingCount: number` (`rating` field unchanged in name, now server-computed).
 - `ProductReview.tsx`: star-rating input (1-5) alongside the existing comment textarea when posting; review list shows author name, star rating, comment, relative date instead of a plain string list.
 - `ProductCard.tsx` / product details: display `ratingAvg` (e.g. "4.3 ★ (7)") instead of the old raw `rating` integer.
 - `productApi.ts`: swap `getComment`/`postComment` for `getReviews`/`addReview` hitting the new endpoints.
