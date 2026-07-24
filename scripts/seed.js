@@ -296,8 +296,11 @@ function randomDateWithinMonths(months) {
 }
 
 async function seed() {
-  if (process.env.NODE_ENV === "production" && !process.argv.includes("--force")) {
-    console.error("Refusing to seed a production database without --force");
+  const usingRealDatabase = !process.env.MONGO_URI;
+  if (usingRealDatabase && !process.argv.includes("--force")) {
+    console.error(
+      "Refusing to seed the real database without --force. Set MONGO_URI to target a local/test database, or pass --force to proceed."
+    );
     process.exit(1);
   }
 
