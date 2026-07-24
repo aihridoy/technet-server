@@ -17,4 +17,12 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
+
 module.exports = app;
