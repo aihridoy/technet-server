@@ -1,11 +1,18 @@
 const jwt = require("jsonwebtoken");
 const jwksClient = require("jwks-rsa");
 
+const projectId = process.env.FIREBASE_PROJECT_ID;
+
+if (!projectId) {
+  console.error("FIREBASE_PROJECT_ID is not set. Token verification will fail.");
+}
+
 const client = jwksClient({
   jwksUri:
     "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com",
   cache: true,
   cacheMaxAge: 6 * 60 * 60 * 1000,
+  timeout: 10000,
 });
 
 function getKey(header, callback) {
@@ -17,7 +24,10 @@ function getKey(header, callback) {
 
 const verifyFirebaseToken = (token) =>
   new Promise((resolve, reject) => {
-    const projectId = process.env.FIREBASE_PROJECT_ID;
+    if (!projectId) {
+      return reject(new Error("FIREBASE_PROJECT_ID env var is not configured"));
+    }
+
     jwt.verify(
       token,
       getKey,
