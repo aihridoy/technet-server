@@ -1,6 +1,10 @@
+jest.mock("../middleware/verifyToken", () => ({
+  verifyFirebaseToken: jest.fn().mockResolvedValue({ email: "admin@example.com" }),
+}));
+
 const request = require("supertest");
 const { MongoMemoryServer } = require("mongodb-memory-server");
-const { connectDB, disconnectDB } = require("../utils/db");
+const { connectDB, disconnectDB, getDB } = require("../utils/db");
 const app = require("../app");
 
 let mongod;
@@ -10,6 +14,9 @@ beforeAll(async () => {
   process.env.MONGO_URI = mongod.getUri();
   process.env.DB_NAME = "test-tech-net";
   await connectDB();
+  await getDB()
+    .collection("users")
+    .insertOne({ email: "admin@example.com", role: "admin" });
 });
 
 afterAll(async () => {
@@ -18,15 +25,18 @@ afterAll(async () => {
 });
 
 test("posting reviews recomputes the product's rating average and count", async () => {
-  const productInsert = await request(app).post("/product").send({
-    name: "Test Widget",
-    image: "https://example.com/x.png",
-    price: 10,
-    features: ["a"],
-    status: true,
-    rating: 0,
-    ratingCount: 0,
-  });
+  const productInsert = await request(app)
+    .post("/product")
+    .set("Authorization", "Bearer admintoken")
+    .send({
+      name: "Test Widget",
+      image: "https://example.com/x.png",
+      price: 10,
+      features: ["a"],
+      status: true,
+      rating: 0,
+      ratingCount: 0,
+    });
   const productId = productInsert.body.insertedId;
 
   await request(app).post(`/product/${productId}/reviews`).send({

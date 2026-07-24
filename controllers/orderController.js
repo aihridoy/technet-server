@@ -40,6 +40,9 @@ exports.getMyOrders = async (req, res) => {
       return res.status(401).send({ status: false, error: "Missing auth token" });
     }
     const decoded = await verifyFirebaseToken(token);
+    if (!decoded.email) {
+      return res.status(401).send({ status: false, error: "Invalid token" });
+    }
     const orders = await orderCollection()
       .find({ userEmail: decoded.email })
       .toArray();
