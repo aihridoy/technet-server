@@ -8,7 +8,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "jest --runInBand",
-    "promote-admin": "node scripts/promoteAdmin.js"
+    "promote-admin": "node scripts/promoteAdmin.js",
+    "seed": "node scripts/seed.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
