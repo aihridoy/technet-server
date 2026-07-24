@@ -5,17 +5,16 @@ const {
   getProductById,
   addProduct,
   deleteProduct,
-  addComment,
-  getComments,
   searchProducts,
 } = require("../controllers/productController");
+const { addReview, getReviews } = require("../controllers/reviewController");
 
 router.get("/products", getProducts);
 router.get("/product/:id", getProductById);
 router.post("/product", addProduct);
 router.delete("/product/:id", deleteProduct);
-router.post("/comment/:id", addComment);
-router.get("/comment/:id", getComments);
 router.get("/search", searchProducts);
+router.post("/product/:productId/reviews", addReview);
+router.get("/product/:productId/reviews", getReviews);
 
 module.exports = router;

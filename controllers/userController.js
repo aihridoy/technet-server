@@ -2,7 +2,12 @@ const { userCollection } = require("../models/userModel");
 
 exports.addUser = async (req, res) => {
   try {
-    const result = await userCollection().insertOne(req.body);
+    const { email, ...rest } = req.body;
+    const result = await userCollection().insertOne({
+      email,
+      ...rest,
+      role: "customer",
+    });
     res.send(result);
   } catch (err) {
     res.status(500).send({ status: false, error: err.message });
